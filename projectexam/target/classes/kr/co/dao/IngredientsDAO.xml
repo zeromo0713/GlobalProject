@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.dao.IngredientsDAO">
+  <select id="getAll" resultType="kr.co.vo.IngredientsVO">
+  <![CDATA[
+	select * from tbl_Ingredients		           
+    ]]>
+  </select> <!-- /* */ = >힌트 ,   힌트로 실행하는 것이 원래보다 성능이 떨어진다면 실행할 때 오라클에서 자체적으로 힌트를 무시한다-->
+ 
+ <select id="getOne" resultType="kr.co.vo.IngredientsVO">
+ 	select * from tbl_Ingredients where ingredient_name = #{ingredient_name}
+ </select>
+ 
+ <select id="getCount" resultType="int">
+ 	select count(*) from tbl_Ingredients
+ </select>
+ 
+  <insert id="insert">
+  	insert into tbl_Ingredients(ingredient_id,ingredient_name)
+  		 values(ingredient_id_sequence.nextval,#{ingredient_name})
+  </insert>
+  
+  
+  <delete id="delOne">
+  	delete from tbl_Ingredients where ingredient_name = #{ingredient_name}
+  </delete>
+  
+  <delete id="delAll">
+  	delete from tbl_Ingredients
+  </delete>
+  
+</mapper>

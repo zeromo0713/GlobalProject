@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.dao.MenuListDAO">
+  <select id="getAll" resultType="kr.co.vo.MenuListVO">
+  <![CDATA[
+	select * from tbl_menulist
+			           
+    ]]>
+  </select> <!-- /* */ = >힌트 ,   힌트로 실행하는 것이 원래보다 성능이 떨어진다면 실행할 때 오라클에서 자체적으로 힌트를 무시한다-->
+ 
+   <select id="getCount" resultType="int">
+  	select count(*) from tbl_menulist
+  </select>
+  
+  <select id="getAllWithCategori" resultType="kr.co.vo.MenuListVO">
+  	select * from tbl_menulist
+  		where categori_id = (select categori_id from tbl_categori where categori_name = #{categori_name})
+  </select>
+   
+  <select id="getOne" parameterType="String" resultType="kr.co.vo.MenuListVO">
+  	select * from tbl_menulist where menu_name = #{menu_name}
+  </select>
+  
+  <select id="getMenuPrice" resultType="HashMap">
+  	select menu_name, menu_price from tbl_menulist
+  </select>
+  
+   <select id="getMenuWithCategori" resultType="HashMap">
+  	 SELECT m.menu_name, m.menu_price
+		FROM tbl_categori c
+		JOIN tbl_menulist m ON c.categori_id = m.categori_id
+	WHERE c.categori_name = #{categori_name} 
+		 and  m.menu_use = 1
+  </select>
+  
+   <select id="getMenuWithCategoriAndImage" resultType="HashMap">
+  	 SELECT m.menu_name, m.menu_price, m.menu_image
+		FROM tbl_categori c
+		JOIN tbl_menulist m ON c.categori_id = m.categori_id
+	WHERE c.categori_name = #{categori_name} 
+		 and  m.menu_use = 1
+  </select>
+  <!--  실험용  -->
+    <select id="getMenuWithImage" resultType="HashMap">
+  	 SELECT menu_name,menu_price,menu_image from tbl_menulist
+  </select>
+  
+  <!-- 추천메뉴 받기  -->
+  <select id="getCategoryRecommendedMenu" resultType="Map">      
+        SELECT menu_name, menu_price, menu_image
+        FROM (
+            SELECT rownum rn, menu_name, menu_price, menu_image
+            FROM (
+                SELECT
+                    m.menu_name,
+                    m.menu_price,
+                    m.menu_image,
+                    RANK() OVER (ORDER BY SUM(ol.sale_rate) DESC) as ranking
+                FROM
+                    tbl_menulist m
+                    INNER JOIN tbl_order_list ol ON m.categori_id = ol.categori_id AND m.menu_id = ol.menu_id
+                WHERE
+                    m.categori_id = #{categori_id}
+                    <if test="mem_ph_num != null">
+			           AND ol.mem_ph_num = #{mem_ph_num}
+				    </if>   
+                GROUP BY
+                    m.menu_name,
+                    m.menu_price,
+                    m.menu_image
+            ) ranked_menu
+         <![CDATA[
+            WHERE rownum <= #{recommendedMenuCount} 
+        )
+        ]]>
+  </select>
+  
+ 
+ 
+  
+  
+  
+ 
+  
+ <insert id="insert" parameterType="kr.co.vo.MenuListVO">
+ <!-- 	selectKey를 사용하여 menu_id를 동적으로 생성-->
+        <selectKey keyProperty="menu_id" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(menu_id), 0) + 1 FROM tbl_menulist WHERE categori_id = #{categori_id}
+        </selectKey>
+        
+      <!--   insert 문  -->
+        INSERT INTO tbl_menulist (categori_id, menu_id, menu_name, menu_image, menu_price, menu_cost,menu_use)
+        VALUES (#{categori_id}, #{menu_id}, #{menu_name}, #{menu_image}, #{menu_price}, #{menu_cost},1)
+    </insert> 
+    
+    
+ 
+    
+<!--  <update id="modify" parameterType="kr.co.vo.MenuListVO">
+  	update tbl_menulist 
+	  		set menu_price = #{menu_price},
+	  			menu_cost = #{menu_cost}
+  		where  menu_name = #{menu_name}
+  </update>   -->
+<!-- Update Menu Query -->
+<update id="modify" parameterType="kr.co.vo.MenuListVO">
+    UPDATE tbl_menulist
+    <set>
+        <if test="menu_use != null">
+            menu_use = #{menu_use},
+        </if>
+        <if test="menu_price != null">
+            menu_price = #{menu_price},
+        </if>
+        <if test="menu_cost != null">
+            menu_cost = #{menu_cost},
+        </if>
+    </set>
+    WHERE menu_name = #{menu_name}
+</update>
+
+  	
+
+  
+  <update id="modify_menu_use" parameterType="String">
+  	update tbl_menulist set menu_use = #{menu_use} where menu_name = #{menu_name}
+  </update> <!--  menu_use가 1이면 판매중인 메뉴, 0이면 판매중단 메뉴 -->
+  
+   <delete id="delOne" parameterType="String">
+  	delete from tbl_menulist where menu_name = #{menu_name}
+  </delete>
+
+
+	 
+  
+</mapper>

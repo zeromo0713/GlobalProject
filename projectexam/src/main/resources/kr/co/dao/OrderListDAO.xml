@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.dao.OrderListDAO">
+  <select id="getAll" resultType="kr.co.vo.OrderListVO">
+  <![CDATA[
+	select * from tbl_order_list		           
+    ]]>
+  </select> <!-- /* */ = >힌트 ,   힌트로 실행하는 것이 원래보다 성능이 떨어진다면 실행할 때 오라클에서 자체적으로 힌트를 무시한다-->
+ 
+   <select id="getCount" resultType="int">
+  	select count(*) from tbl_order_list
+  </select>
+  
+   <select id="getCountSaleRate" resultType="int">
+	  	SELECT SUM(sale_rate) as totalSalesCount
+			FROM tbl_order_list
+			<if test="mem_ph_num != null">
+	        WHERE mem_ph_num = #{mem_ph_num}
+	    	</if>
+  </select>
+   
+  <select id="getCategori" parameterType="String" resultType="kr.co.vo.OrderListVO">          
+	select * from tbl_order_list 
+  		where categori_id = (select categori_id from tbl_categori where categori_name = #{categori_name} )
+  </select>
+  
+    <select id="getMenu" parameterType="String" resultType="kr.co.vo.OrderListVO">          
+	select * from tbl_order_list 
+    where menu_id  = (select menu_id from tbl_menulist where menu_name = #{menu_name} )
+     and categori_id = (select categori_id from tbl_menulist where menu_name =#{menu_name} )
+  </select>
+  
+   <select id="getCategorySalesRatio"  resultType="Map">          
+	   SELECT categori_id, SUM(sale_rate) AS sum
+	    FROM tbl_order_list
+	    <if test="mem_ph_num != null">
+	        WHERE mem_ph_num = #{mem_ph_num}
+	    </if>
+	    GROUP BY categori_id
+	    ORDER BY sum DESC
+  </select>
+ 
+  
+  <insert id="insert" >
+ 	INSERT INTO tbl_order_list (order_id, categori_id, menu_id, mem_ph_num, sale_price, sale_rate, sale_date)
+		VALUES (order_id_sequence.NEXTVAL, 
+				(select categori_id from tbl_menulist where menu_name = #{menu_name}), 
+				(select menu_id from tbl_menulist where menu_name = #{menu_name}), 
+				#{mem_ph_num}, 
+    			(select menu_price from tbl_menulist where menu_name = #{menu_name})*#{sale_rate},
+    			#{sale_rate}, 
+    			 sysdate)
+    </insert>
+    
+    
+  
+  
+</mapper>

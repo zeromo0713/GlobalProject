@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.dao.MemberDAO">
+	<!-- 나이대별로 추출하기 위해서  -->
+	<select id="getAllListWithAgeGroup" resultType="kr.co.vo.MemberVO">
+	   <![CDATA[
+		SELECT *
+FROM (
+    SELECT
+      o.mem_ph_num,
+      m.mem_birth,
+      m.mem_gender,
+      SUM(o.sale_price) as total_sale_price,
+      m.mem_grade,
+      TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) as age,
+      CASE
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) <= 10 THEN '10대 이하'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 11 AND 20 THEN '10대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 21 AND 30 THEN '20대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 31 AND 40 THEN '30대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 41 AND 50 THEN '40대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 51 AND 60 THEN '50대'
+        ELSE '60대 이상'
+      END as age_group
+    FROM tbl_order_list o
+    JOIN tbl_member m ON o.mem_ph_num = m.mem_ph_num
+    GROUP BY
+      o.mem_ph_num,
+      m.mem_birth,
+      m.mem_gender,
+      m.mem_grade,
+      CASE
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) <= 10 THEN '10대 이하'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 11 AND 20 THEN '10대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 21 AND 30 THEN '20대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 31 AND 40 THEN '30대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 41 AND 50 THEN '40대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 51 AND 60 THEN '50대'
+        ELSE '60대 이상'
+      END
+)
+ORDER BY total_sale_price DESC				           
+	    ]]>
+  	</select>
+  	
+  	
+  	
+  	<select id="getCountWithAgeGroup" resultType="int">
+	   <![CDATA[
+		SELECT count(*)
+FROM (
+    SELECT
+      o.mem_ph_num,
+      m.mem_birth,
+      m.mem_gender,
+      SUM(o.sale_price) as total_sale_price,
+      m.mem_grade,
+      TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) as age,
+      CASE
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) <= 10 THEN '10대 이하'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 11 AND 20 THEN '10대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 21 AND 30 THEN '20대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 31 AND 40 THEN '30대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 41 AND 50 THEN '40대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 51 AND 60 THEN '50대'
+        ELSE '60대 이상'
+      END as age_group
+    FROM tbl_order_list o
+    JOIN tbl_member m ON o.mem_ph_num = m.mem_ph_num
+    GROUP BY
+      o.mem_ph_num,
+      m.mem_birth,
+      m.mem_gender,
+      m.mem_grade,
+      CASE
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) <= 10 THEN '10대 이하'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 11 AND 20 THEN '10대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 21 AND 30 THEN '20대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 31 AND 40 THEN '30대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 41 AND 50 THEN '40대'
+        WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 51 AND 60 THEN '50대'
+        ELSE '60대 이상'
+      END
+)
+WHERE age_group = COALESCE(#{age_group}, age_group)
+
+				           
+	    ]]>
+  	</select>
+  	<!-- 페이징을 위한 쿼리 -->
+  <select id="getListWithAgeGroupPaging" parameterType="map" resultType="kr.co.vo.MemberVO">
+  <![CDATA[
+    select * FROM(
+	    SELECT rownum rn, mem_ph_num, mem_birth, mem_gender, total_sale_price, mem_grade, age, age_group FROM (
+	        SELECT * FROM (
+	            SELECT o.mem_ph_num, m.mem_birth,  m.mem_gender, SUM(o.sale_price) as total_sale_price, m.mem_grade,
+	              TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) as age,
+	              CASE
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) <= 10 THEN '10대 이하'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 11 AND 20 THEN '10대'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 21 AND 30 THEN '20대'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 31 AND 40 THEN '30대'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 41 AND 50 THEN '40대'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 51 AND 60 THEN '50대'
+	                ELSE '60대 이상'
+	              END as age_group
+	            FROM tbl_order_list o
+	            JOIN tbl_member m ON o.mem_ph_num = m.mem_ph_num
+	            GROUP BY
+	              o.mem_ph_num,
+	              m.mem_birth,
+	              m.mem_gender,
+	              m.mem_grade,
+	              CASE
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) <= 10 THEN '10대 이하'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 11 AND 20 THEN '10대'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 21 AND 30 THEN '20대'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 31 AND 40 THEN '30대'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 41 AND 50 THEN '40대'
+	                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(m.mem_birth, 'RR/MM/DD')) / 12) BETWEEN 51 AND 60 THEN '50대'
+	                ELSE '60대 이상'
+	              END
+	        )
+	        WHERE age_group = COALESCE(#{age_group}, age_group)
+	        ORDER BY total_sale_price DESC)
+	    where rownum >=1)
+	where rn <= #{criteria.pageNum} * #{criteria.amount}
+	AND rn > (#{criteria.pageNum} - 1) * #{criteria.amount} 
+  ]]>
+</select>
+
+  	
+  	
+  	
+
+  <select id="getList" resultType="kr.co.vo.MemberVO">
+  <![CDATA[
+	select * from tbl_member
+			           
+    ]]>
+  </select> <!-- /* */ = >힌트 ,   힌트로 실행하는 것이 원래보다 성능이 떨어진다면 실행할 때 오라클에서 자체적으로 힌트를 무시한다-->
+ 
+   <select id="getCount" resultType="int">
+  	select count(*) from tbl_member
+  </select>
+  
+   
+  <select id="getOne" parameterType="String" resultType="kr.co.vo.MemberVO">
+  	select * from tbl_member where mem_ph_num = #{mem_ph_num}
+  </select>
+  
+  
+  
+  <insert id="insert" parameterType="kr.co.vo.MemberVO">
+ 	insert into tbl_member(mem_ph_num, mem_birth,mem_gender ,mem_regidate ,mem_grade , mem_unique_num , mem_point ) 
+  		values(#{mem_ph_num},#{mem_birth},#{mem_gender},sysdate,1,#{mem_unique_num},0)
+  </insert>
+
+  <delete id="delete" parameterType="String">
+  	delete from tbl_member where mem_ph_num = #{mem_ph_num}
+  </delete>
+  
+   <delete id="deleteAll" >
+  	delete from tbl_member 
+  </delete>
+  
+  <update id="modify" parameterType="kr.co.vo.MemberVO">
+  	update tbl_member 
+	  		set mem_ph_num = #{mem_ph_num}
+  		where  mem_unique_num = #{mem_unique_num}
+  </update>
+  
+    <update id="modify_grade" parameterType="kr.co.vo.MemberVO">
+  	update tbl_member 
+	  		set mem_grade = #{mem_grade}
+  		where  mem_ph_num = #{mem_ph_num}
+  </update>
+  
+  <update id="updatePoint">
+  	 UPDATE tbl_member
+		    SET mem_point = mem_point + #{savingPoints}
+	   	WHERE mem_ph_num = #{mem_ph_num}
+  </update>
+  
+  
+</mapper>

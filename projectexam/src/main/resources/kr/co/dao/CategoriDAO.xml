@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.dao.CategoriDAO">
+  <select id="getList" resultType="kr.co.vo.CategoriVO">
+  <![CDATA[
+	select * from tbl_categori		           
+    ]]>
+  </select> <!-- /* */ = >힌트 ,   힌트로 실행하는 것이 원래보다 성능이 떨어진다면 실행할 때 오라클에서 자체적으로 힌트를 무시한다-->
+ 
+ <select id="getOne" resultType="kr.co.vo.CategoriVO">
+ 	select * from tbl_categori where categori_name = #{categori_name}
+ </select>
+ 
+ <select id="getCount" resultType="int">
+ 	select count(*) tbl_categori
+ </select>
+ 
+  <insert id="insert">
+  	insert into tbl_categori(categori_id,categori_name)
+  		 values(#{categori_id},#{categori_name})
+  </insert>
+  
+  <update id="modify">
+  	update tbl_categori 
+  		set categori_id = #{categori_id}
+  		where categori_name = #{categori_name}
+  </update>
+  
+  <delete id="delOne">
+  	delete from tbl_categori where categori_id = #{categori_id}
+  </delete>
+  
+  <delete id="delAll">
+  	delete from tbl_categori
+  </delete>
+  
+</mapper>

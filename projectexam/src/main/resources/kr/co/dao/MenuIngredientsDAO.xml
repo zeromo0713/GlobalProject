@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.dao.MenuIngredientsDAO">
+  <select id="getAll" resultType="kr.co.vo.MenuIngredientsVO">
+  <![CDATA[
+	select * from tbl_menu_ingredients	           
+    ]]>
+    
+  </select> <!-- /* */ = >힌트 ,   힌트로 실행하는 것이 원래보다 성능이 떨어진다면 실행할 때 오라클에서 자체적으로 힌트를 무시한다-->
+  
+  <select id="getUseMenu" resultType="kr.co.vo.MenuIngredientsVO">
+  	select * from tbl_menu_ingredients 
+  		where menu_id = (select menu_id from tbl_menulist where menu_name = #{menu_name})
+  </select>
+ 
+ <select id="getUseCategori" resultType="kr.co.vo.MenuIngredientsVO">
+  	select * from tbl_menu_ingredients 
+  		where categori_id = (select categori_id from tbl_categori where categori_name = #{categori_name})
+  </select>
+  
+  <insert id="insert">
+  	insert into tbl_menu_ingredients(menu_ingri_num, menu_id, categori_id, ingredient_id, use_ingredient) 
+    values (menu_ingri_num_sequence.nextval,
+            (select menu_id from tbl_menulist where menu_name = #{menu_name}),
+             (select categori_id from tbl_menulist where menu_name = #{menu_name}),
+             (select ingredient_id from tbl_ingredients where ingredient_name = #{ingredient_name}),
+             #{use_ingredient}
+            )
+  </insert>
+  
+  <delete id="delMenu">
+  	delete from tbl_menu_ingredients 
+  		where menu_id = (select menu_id from tbl_menulist where menu_name = #{menu_name})
+  </delete>
+  
+  </mapper>
