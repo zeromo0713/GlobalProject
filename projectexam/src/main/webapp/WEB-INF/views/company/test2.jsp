@@ -76,6 +76,6 @@
     </c:if>
 
     <%-- 엑셀로 내보내기 버튼 --%>
-    <button class="export-button" onclick="exportToExcel()">Export to Excel</button>
+    <button class="export-button" onclick="exportToExcel()">엑셀 저장</button>
 </body>
 </html>
