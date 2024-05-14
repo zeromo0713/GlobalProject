@@ -66,7 +66,6 @@ public class MenuController {
 		// categoryName이 null인 경우 기본적으로 설정할 값 (예: '한식')
 	    String defaultCategory = "추천";
 	 // 주문 내역이 없을 경우에는 default_category를 커피로 지정
-	    System.out.println("---------------------------시작은 하나?? --------------------------");
 	    if(menuListService.getRecommendedMenu(session) == null) {
 	    	defaultCategory = "한식";
 	    }
