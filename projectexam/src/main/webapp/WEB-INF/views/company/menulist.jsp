@@ -311,7 +311,7 @@
     <!-- 헤더 영역 -->
     <div id="headarea">
         <header>
-            <br /><a href="/"><h1>빵모의 음식가게</h1></a>
+            <br /><a href="/"><h1>Food Court</h1></a>
         </header>
     </div>
     <hr style="color: lightgray; border-style: solid; border-width: 1px; border-color: lightgray; opacity: 0.5;">

@@ -144,7 +144,7 @@
 <body>
 	<div id="headarea">
 		<header>
-			<a href="/"><h1>빵모의 음식가게</h1></a>
+			<a href="/"><h1>Food Court</h1></a>
 		</header>
 	</div>
 	
